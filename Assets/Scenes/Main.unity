@@ -476,8 +476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5343ba228b1904e3d85d57149e4322da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 7
-  height: 9
+  width: 6
+  height: 6
   borderSize: 2
   tilePrefab: {fileID: 3588992325552106184, guid: 6a82f9dba0dd245d6bd0ebc89b71b8e3, type: 3}
   gamePiecePrefabs:
@@ -486,6 +486,7 @@ MonoBehaviour:
   - {fileID: 1120734220596853350, guid: 6b9288b26fd69492498f289f7abe2aec, type: 3}
   - {fileID: 4745340539815547484, guid: 5d2e7e74f488f44939f231f0b9dd528a, type: 3}
   - {fileID: 7786026107594391633, guid: 6df1b80e89f094e1c9a9d1bfd4c2fb35, type: 3}
+  swapTime: 0.25
 --- !u!4 &881504868
 Transform:
   m_ObjectHideFlags: 0
