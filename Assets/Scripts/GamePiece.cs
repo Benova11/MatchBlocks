@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GamePiece : MonoBehaviour
 {
-
 	public int xIndex;
 	public int yIndex;
 
@@ -11,31 +10,11 @@ public class GamePiece : MonoBehaviour
 
 	bool isMoving = false;
 
+	public enum MatchValue{Yellow,Blue,Magenta,Indigo,Green,Teal,Red,Cyan,Wild}
+	public enum InterpType{Linear,EaseOut,EaseIn,SmoothStep,SmootherStep};
+
 	public InterpType interpolation = InterpType.SmootherStep;
-
-	public enum InterpType
-	{
-		Linear,
-		EaseOut,
-		EaseIn,
-		SmoothStep,
-		SmootherStep
-	};
-
 	public MatchValue matchValue;
-
-	public enum MatchValue
-	{
-		Yellow,
-		Blue,
-		Magenta,
-		Indigo,
-		Green,
-		Teal,
-		Red,
-		Cyan,
-		Wild
-	}
 
 	public void Init(Board board)
 	{
@@ -50,12 +29,8 @@ public class GamePiece : MonoBehaviour
 
 	public void Move(int destX, int destY, float timeToMove)
 	{
-
 		if (!isMoving)
-		{
-
 			StartCoroutine(MoveRoutine(new Vector3(destX, destY, 0), timeToMove));
-		}
 	}
 
 
@@ -113,5 +88,4 @@ public class GamePiece : MonoBehaviour
 		}
 		return t;
 	}
-
 }
