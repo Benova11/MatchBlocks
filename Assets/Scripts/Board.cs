@@ -200,7 +200,7 @@ public class Board : MonoBehaviour
     GamePiece clickedPiece = allGamePiecesList[clickedTile.xIndex, clickedTile.yIndex];
     GamePiece targetPiece = allGamePiecesList[targetTile.xIndex, targetTile.yIndex];
 
-    if (clickedPiece != null)
+    if (clickedPiece != null && IsMoveSafe(clickedTile, targetTile))
     {
       clickedPiece.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
       if (targetPiece != null)
@@ -216,12 +216,32 @@ public class Board : MonoBehaviour
       List<GamePiece> targetPieceMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
 
 
-      if (clickedPieceMatches.Count > 0 || targetPieceMatches.Count > 0)
-      {
-        yield return new WaitForSeconds(swapTime);
-        ClearAndCollapse(clickedPieceMatches.Union(targetPieceMatches).ToList());
-      }
+      //if (clickedPieceMatches.Count > 0 || targetPieceMatches.Count > 0)
+      //{
+      yield return new WaitForSeconds(swapTime);
+      ClearAndCollapse(clickedPieceMatches.Union(targetPieceMatches).ToList());
+      //}
+      CollapseColumn(clickedTile.xIndex);
+      CollapseColumn(targetTile.xIndex);
     }
+  }
+
+  bool IsMoveSafe(Tile clickedTile, Tile targetTile)
+  {
+    //if (targetTile.xIndex > clickedTile.xIndex)
+    //{
+    if (targetTile.yIndex == 0 || allGamePiecesList[targetTile.xIndex, targetTile.yIndex - 1] != null)
+    {
+      if(targetTile.yIndex > clickedTile.yIndex && allGamePiecesList[targetTile.xIndex, targetTile.yIndex] == null)
+        return false;
+      return true;
+    }
+    return false;
+    //}
+    //else
+    //{
+
+    //}
   }
 
   bool IsNextTo(Tile start, Tile end)
@@ -452,7 +472,7 @@ public class Board : MonoBehaviour
   {
     foreach (GamePiece piece in gamePieces)
     {
-      if(piece != null)
+      if (piece != null)
         ClearPieceAt(piece.xIndex, piece.yIndex);
     }
   }

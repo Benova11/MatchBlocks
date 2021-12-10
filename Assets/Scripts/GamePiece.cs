@@ -29,6 +29,7 @@ public class GamePiece : MonoBehaviour
 
 	public void Move(int destX, int destY, float timeToMove)
 	{
+
 		if (!isMoving)
 			StartCoroutine(MoveRoutine(new Vector3(destX, destY, 0), timeToMove));
 	}
