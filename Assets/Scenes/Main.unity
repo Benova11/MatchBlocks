@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 7
-  height: 9
+  height: 3
   borderSize: 2
   tilePrefab: {fileID: 3588992325552106184, guid: 6a82f9dba0dd245d6bd0ebc89b71b8e3, type: 3}
   gamePiecePrefabs:
