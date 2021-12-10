@@ -228,8 +228,6 @@ public class Board : MonoBehaviour
 
   bool IsMoveSafe(Tile clickedTile, Tile targetTile)
   {
-    //if (targetTile.xIndex > clickedTile.xIndex)
-    //{
     if (targetTile.yIndex == 0 || allGamePiecesList[targetTile.xIndex, targetTile.yIndex - 1] != null)
     {
       if(targetTile.yIndex > clickedTile.yIndex && allGamePiecesList[targetTile.xIndex, targetTile.yIndex] == null)
@@ -237,11 +235,6 @@ public class Board : MonoBehaviour
       return true;
     }
     return false;
-    //}
-    //else
-    //{
-
-    //}
   }
 
   bool IsNextTo(Tile start, Tile end)
