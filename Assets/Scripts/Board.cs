@@ -16,21 +16,42 @@ public class Board : MonoBehaviour
 
   public float swapTime = 0.5f;
 
-  Tile[,] m_allTiles;
-  GamePiece[,] m_allGamePieces;
+  Tile[,] allTileList;
+  GamePiece[,] allGamePiecesList;
 
   Tile clickedTile;
   Tile targetTile;
 
   void Start()
   {
-    m_allTiles = new Tile[width, height];
-    m_allGamePieces = new GamePiece[width, height];
+    allTileList = new Tile[width, height];
+    allGamePiecesList = new GamePiece[width, height];
 
     SetupTiles();
     SetupCamera();
-    FillBoard();
+    //FillBoard();
+    int[,] array2D = new int[,] {
+      { -1, -1, 2, 1, 2, -1, -1 },
+      { 3, -1, 1, 2, 1, -1, 2 },
+      { 3, -1, 2, 1, 2, -1, 1 }};
 
+    array2D = AdjustMatrixToDisplay(array2D);
+
+    FillBoard(array2D);
+  }
+
+  int[,] AdjustMatrixToDisplay(int[,] matrix)
+  {
+    int[,] array2D = new int[width, height];
+    for (int i = 0; i < width; i++)
+    {
+      for (int j = 0; j < height; j++)
+      {
+        Debug.Log(matrix[j, i]);
+        array2D[i, height - j - 1] = matrix[j, i];
+      }
+    }
+    return array2D;
   }
 
   void SetupTiles()
@@ -43,11 +64,11 @@ public class Board : MonoBehaviour
 
         tile.name = "Tile (" + i + "," + j + ")";
 
-        m_allTiles[i, j] = tile.GetComponent<Tile>();
+        allTileList[i, j] = tile.GetComponent<Tile>();
 
         tile.transform.parent = transform;
 
-        m_allTiles[i, j].Init(i, j, this);
+        allTileList[i, j].Init(i, j, this);
 
       }
     }
@@ -79,6 +100,15 @@ public class Board : MonoBehaviour
     return gamePiecePrefabs[randomIdx];
   }
 
+  GameObject GetGamePiece(int pieceType)
+  {
+    if (gamePiecePrefabs[pieceType] == null)
+    {
+      Debug.LogWarning("BOARD:  " + pieceType + "does not contain a valid GamePiece prefab!");
+    }
+    return gamePiecePrefabs[pieceType];
+  }
+
   public void PlaceGamePiece(GamePiece gamePiece, int x, int y)
   {
     if (gamePiece == null)
@@ -92,7 +122,7 @@ public class Board : MonoBehaviour
 
     if (IsWithinBounds(x, y))
     {
-      m_allGamePieces[x, y] = gamePiece;
+      allGamePiecesList[x, y] = gamePiece;
     }
 
     gamePiece.SetCoord(x, y);
@@ -115,6 +145,19 @@ public class Board : MonoBehaviour
     return randomPiece.GetComponent<GamePiece>();
   }
 
+  GamePiece FillPieceAt(int x, int y,int pieceType)
+  {
+    GameObject gamePiece = null;
+    if (pieceType != -1)
+    {
+      gamePiece = Instantiate(GetGamePiece(pieceType), Vector3.zero, Quaternion.identity) as GameObject;
+      gamePiece.GetComponent<GamePiece>().Init(this);
+      PlaceGamePiece(gamePiece.GetComponent<GamePiece>(), x, y);
+      gamePiece.transform.parent = transform;
+    }
+    return gamePiece.GetComponent<GamePiece>();
+  }
+
   void ReplaceWithRandom(List<GamePiece> gamePieces)
   {
     foreach (GamePiece piece in gamePieces)
@@ -124,18 +167,23 @@ public class Board : MonoBehaviour
     }
   }
 
-  void FillBoard()
+  void FillBoard(int[,] matrix = null)
   {
+    //for (int i = 0; i < width; i++)
+    //{
+    //  for (int j = 0; j < height; j++)
+    //  {
+    //    GamePiece gamePiece = FillRandomAt(i, j);
+    //  }
+    //}
+
     for (int i = 0; i < width; i++)
     {
       for (int j = 0; j < height; j++)
       {
-        GamePiece gamePiece = FillRandomAt(i, j);
-        //while (HasMatchOnFill(i, j))
-        //{
-        //  ClearPieceAt(i, j);
-        //  gamePiece = FillRandomAt(i, j);
-        //}
+        GamePiece gamePiece;
+        if (matrix[i, j] != -1)
+           gamePiece = FillPieceAt(i, j, matrix[i, j]);
       }
     }
   }
@@ -168,14 +216,18 @@ public class Board : MonoBehaviour
 
   IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
   {
-    GamePiece clickedPiece = m_allGamePieces[clickedTile.xIndex, clickedTile.yIndex];
-    GamePiece targetPiece = m_allGamePieces[targetTile.xIndex, targetTile.yIndex];
+    GamePiece clickedPiece = allGamePiecesList[clickedTile.xIndex, clickedTile.yIndex];
+    GamePiece targetPiece = allGamePiecesList[targetTile.xIndex, targetTile.yIndex];
 
     if (clickedPiece != null)
     {
       clickedPiece.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
       if (targetPiece != null)
         targetPiece.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+      else
+      {
+        allGamePiecesList[clickedTile.xIndex, clickedTile.yIndex] = null;
+      }
 
       yield return new WaitForSeconds(swapTime);
 
@@ -192,8 +244,6 @@ public class Board : MonoBehaviour
       if (targetPieceMatches != null)
         CollapseColumn(targetPieceMatches);
     }
-
-
   }
 
   bool IsNextTo(Tile start, Tile end)
@@ -227,7 +277,7 @@ public class Board : MonoBehaviour
     GamePiece startPiece = null;
 
     if (IsWithinBounds(startX, startY))
-      startPiece = m_allGamePieces[startX, startY];
+      startPiece = allGamePiecesList[startX, startY];
 
     if (startPiece != null)
       matches.Add(startPiece);
@@ -245,7 +295,7 @@ public class Board : MonoBehaviour
       if (!IsWithinBounds(nextX, nextY))
         break;
 
-      GamePiece nextPiece = m_allGamePieces[nextX, nextY];
+      GamePiece nextPiece = allGamePiecesList[nextX, nextY];
 
       if (nextPiece == null)
         break;
@@ -333,18 +383,18 @@ public class Board : MonoBehaviour
     List<GamePiece> movingPieces = new List<GamePiece>();
     for (int i = 0; i < height - 1; i++)
     {
-      if (m_allGamePieces[column, i] == null)
+      if (allGamePiecesList[column, i] == null)
       {
         for (int j = i + 1; j < height; j++)
         {
-          if (m_allGamePieces[column, j] != null)
+          if (allGamePiecesList[column, j] != null)
           {
-            m_allGamePieces[column, j].Move(column, i, collaspseTime);
-            m_allGamePieces[column, i] = m_allGamePieces[column, j];
-            m_allGamePieces[column, i].SetCoord(column, i);
-            if (!movingPieces.Contains(m_allGamePieces[column, i]))
-              movingPieces.Add(m_allGamePieces[column, i]);
-            m_allGamePieces[column, j] = null;
+            allGamePiecesList[column, j].Move(column, i, collaspseTime);
+            allGamePiecesList[column, i] = allGamePiecesList[column, j];
+            allGamePiecesList[column, i].SetCoord(column, i);
+            if (!movingPieces.Contains(allGamePiecesList[column, i]))
+              movingPieces.Add(allGamePiecesList[column, i]);
+            allGamePiecesList[column, j] = null;
             break;
           }
         }
@@ -367,13 +417,13 @@ public class Board : MonoBehaviour
 
   void HighlightTileOff(int x, int y)
   {
-    SpriteRenderer spriteRenderer = m_allTiles[x, y].GetComponent<SpriteRenderer>();
+    SpriteRenderer spriteRenderer = allTileList[x, y].GetComponent<SpriteRenderer>();
     spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
   }
 
   void HighlightTileOn(int x, int y, Color col)
   {
-    SpriteRenderer spriteRenderer = m_allTiles[x, y].GetComponent<SpriteRenderer>();
+    SpriteRenderer spriteRenderer = allTileList[x, y].GetComponent<SpriteRenderer>();
     spriteRenderer.color = col;
   }
 
@@ -399,11 +449,11 @@ public class Board : MonoBehaviour
 
   void ClearPieceAt(int x, int y)
   {
-    GamePiece pieceToClear = m_allGamePieces[x, y];
+    GamePiece pieceToClear = allGamePiecesList[x, y];
 
     if (pieceToClear != null)
     {
-      m_allGamePieces[x, y] = null;
+      allGamePiecesList[x, y] = null;
       Destroy(pieceToClear.gameObject);
     }
 

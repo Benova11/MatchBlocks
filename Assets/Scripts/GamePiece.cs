@@ -73,15 +73,9 @@ public class GamePiece : MonoBehaviour
 		{
 			if (Vector3.Distance(transform.position, destination) < 0.01f)
 			{
-
 				reachedDestination = true;
-
 				if (motherBoard != null)
-				{
 					motherBoard.PlaceGamePiece(this, (int)destination.x, (int)destination.y);
-
-				}
-
 				break;
 			}
 
