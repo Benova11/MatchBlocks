@@ -477,16 +477,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 7
-  height: 3
-  borderSize: 2
+  height: 7
+  borderSize: 0.2
   tilePrefab: {fileID: 3588992325552106184, guid: 6a82f9dba0dd245d6bd0ebc89b71b8e3, type: 3}
   gamePiecePrefabs:
-  - {fileID: 3025975251561859071, guid: efcf3b832adb04812a83438836371ac9, type: 3}
-  - {fileID: 7476282220300181934, guid: cbf7d9ebf177f4ae9bdb44a9e55fd8b3, type: 3}
-  - {fileID: 1120734220596853350, guid: 6b9288b26fd69492498f289f7abe2aec, type: 3}
-  - {fileID: 4745340539815547484, guid: 5d2e7e74f488f44939f231f0b9dd528a, type: 3}
-  - {fileID: 7786026107594391633, guid: 6df1b80e89f094e1c9a9d1bfd4c2fb35, type: 3}
-  swapTime: 0.25
+  - {fileID: 8983896724464646123, guid: 07c1d0b2c74894177bc4b037aee9a73b, type: 3}
+  - {fileID: 8983896724464646123, guid: 13cd3f453a3e245e49ec7cf440269f73, type: 3}
+  - {fileID: 8983896724464646123, guid: b5a482ef4a19540a588b25e4501b699d, type: 3}
+  - {fileID: 8983896724464646123, guid: a383034f3fea148458f172720182ef06, type: 3}
+  - {fileID: 8983896724464646123, guid: 1cf1df8665e074520b9785b09e2eec44, type: 3}
+  swapTime: 0.12
+  tileSizeUnitRatio: 0
 --- !u!4 &881504868
 Transform:
   m_ObjectHideFlags: 0

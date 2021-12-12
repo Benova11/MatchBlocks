@@ -8,12 +8,14 @@ public class Board : MonoBehaviour
   public int width;
   public int height;
 
-  public int borderSize;
+  public float borderSize;
 
   public GameObject tilePrefab;
   public GameObject[] gamePiecePrefabs;
 
   public float swapTime = 0.5f;
+
+  public float tileSizeUnitRatio = 0f;
 
   Tile[,] allTileList;
   GamePiece[,] allGamePiecesList;
@@ -26,6 +28,10 @@ public class Board : MonoBehaviour
     SetupTiles();
     SetupCamera();
     int[,] array2D = new int[,] {
+      { -1, -1, -1, -1, -1, -1, -1 },
+      { -1, -1, -1, -1, -1, -1, -1 },
+      { -1, -1, -1, -1, -1, -1, -1 },
+      { -1, -1, -1, -1, -1, -1, -1 },
       { -1, -1, 2, 1, 2, -1, -1 },
       { 3, -1, 1, 2, 1, -1, 2 },
       { 3, -1, 2, 1, 2, -1, 1 }};
@@ -42,7 +48,7 @@ public class Board : MonoBehaviour
     {
       for (int j = 0; j < height; j++)
       {
-        Debug.Log(matrix[j, i]);
+        //Debug.Log(matrix[j, i]);
         array2D[i, height - j - 1] = matrix[j, i];
       }
     }
@@ -217,7 +223,7 @@ public class Board : MonoBehaviour
 
       //if (clickedPieceMatches.Count > 0 || targetPieceMatches.Count > 0)
       //{
-      yield return new WaitForSeconds(swapTime);
+      yield return new WaitForSeconds(swapTime/2);
       ClearAndCollapse(clickedPieceMatches.Union(targetPieceMatches).ToList());
       //}
       //yield return new WaitForSeconds(swapTime + 0.1f);
@@ -479,7 +485,7 @@ public class Board : MonoBehaviour
   {
     List<GamePiece> movingPieces = new List<GamePiece>();
     List<GamePiece> matches = new List<GamePiece>();
-    yield return new WaitForSeconds(0.25f);
+    yield return new WaitForSeconds(0.1f);
 
     bool isFinished = false;
 
@@ -487,11 +493,11 @@ public class Board : MonoBehaviour
     {
       ClearPieceAt(gamePieces);
 
-      yield return new WaitForSeconds(0.25f);
+      //yield return new WaitForSeconds(0.1f);
 
       movingPieces = CollapseColumn(gamePieces);
 
-      yield return new WaitForSeconds(0.25f);
+      yield return new WaitForSeconds(0.1f);
 
       matches = FindAllMatches();//FindMatchesAt(movingPieces);
 

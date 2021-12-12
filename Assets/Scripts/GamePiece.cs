@@ -10,7 +10,7 @@ public class GamePiece : MonoBehaviour
 
 	bool isMoving = false;
 
-	public enum MatchValue{Yellow,Blue,Magenta,Indigo,Green,Teal,Red,Cyan,Wild}
+	public enum MatchValue{LightBlue,Blue,Pink,Purple,Green,Red,Yellow,Wild}
 	public enum InterpType{Linear,EaseOut,EaseIn,SmoothStep,SmootherStep};
 
 	public InterpType interpolation = InterpType.SmootherStep;
