@@ -215,12 +215,12 @@ public class Board : MonoBehaviour
       List<GamePiece> clickedPieceMatches = FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
       List<GamePiece> targetPieceMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
 
-
       //if (clickedPieceMatches.Count > 0 || targetPieceMatches.Count > 0)
       //{
       yield return new WaitForSeconds(swapTime);
       ClearAndCollapse(clickedPieceMatches.Union(targetPieceMatches).ToList());
       //}
+      //yield return new WaitForSeconds(swapTime + 0.1f);
       CollapseColumn(clickedTile.xIndex);
       CollapseColumn(targetTile.xIndex);
     }
@@ -228,13 +228,13 @@ public class Board : MonoBehaviour
 
   bool IsMoveSafe(Tile clickedTile, Tile targetTile)
   {
-    if (targetTile.yIndex == 0 || allGamePiecesList[targetTile.xIndex, targetTile.yIndex - 1] != null)
+    //if (targetTile.yIndex == 0 || allGamePiecesList[targetTile.xIndex, targetTile.yIndex - 1] != null)
     {
       if(targetTile.yIndex > clickedTile.yIndex && allGamePiecesList[targetTile.xIndex, targetTile.yIndex] == null)
         return false;
       return true;
     }
-    return false;
+    //return false;
   }
 
   bool IsNextTo(Tile start, Tile end)
@@ -493,7 +493,7 @@ public class Board : MonoBehaviour
 
       yield return new WaitForSeconds(0.25f);
 
-      matches = FindMatchesAt(movingPieces);
+      matches = FindAllMatches();//FindMatchesAt(movingPieces);
 
       if (matches.Count == 0)
       {
