@@ -1,28 +1,27 @@
 using UnityEngine;
 using System.Collections;
 
-public enum PieceType
-{
-	Noraml, Obstacle,STAM
-}
+public enum PieceValue { LightBlue,Blue,Pink,Purple,Green,Red,Yellow,Wild }
+public enum PieceType { Obstacle,Blue, Pink, Purple, Green }
 
-
+[RequireComponent(typeof(SpriteRenderer))]
 public class GamePiece : MonoBehaviour
 {
+	public enum InterpType { Linear,EaseOut,EaseIn,SmoothStep,SmootherStep };
+
+	public InterpType interpolation = InterpType.SmootherStep;
+	public PieceType pieceType = PieceType.Blue;
+	public PieceValue matchValue;
+
 	public int xIndex;
 	public int yIndex;
-
 	Board motherBoard;
-
-	public PieceType pieceType = PieceType.Noraml;
 
 	bool isMoving = false;
 
-	public enum MatchValue{LightBlue,Blue,Pink,Purple,Green,Red,Yellow,Wild}
-	public enum InterpType{Linear,EaseOut,EaseIn,SmoothStep,SmootherStep};
-
-	public InterpType interpolation = InterpType.SmootherStep;
-	public MatchValue matchValue;
+	SpriteRenderer spriteRenderer;
+	public int breakableValue = 0;
+	public Sprite[] breakableSprites;
 
 	public void Init(Board board,int pieceType)
 	{
@@ -42,7 +41,6 @@ public class GamePiece : MonoBehaviour
 		if (!isMoving)
 			StartCoroutine(MoveRoutine(new Vector3(destX, destY, 0), timeToMove));
 	}
-
 
 	IEnumerator MoveRoutine(Vector3 destination, float timeToMove)
 	{
