@@ -1,12 +1,20 @@
 using UnityEngine;
 using System.Collections;
 
+public enum PieceType
+{
+	Noraml, Obstacle,STAM
+}
+
+
 public class GamePiece : MonoBehaviour
 {
 	public int xIndex;
 	public int yIndex;
 
 	Board motherBoard;
+
+	public PieceType pieceType = PieceType.Noraml;
 
 	bool isMoving = false;
 
@@ -16,9 +24,10 @@ public class GamePiece : MonoBehaviour
 	public InterpType interpolation = InterpType.SmootherStep;
 	public MatchValue matchValue;
 
-	public void Init(Board board)
+	public void Init(Board board,int pieceType)
 	{
 		motherBoard = board;
+		this.pieceType = (PieceType)pieceType;
 	}
 
 	public void SetCoord(int x, int y)

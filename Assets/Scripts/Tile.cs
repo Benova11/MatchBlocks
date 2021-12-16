@@ -1,11 +1,18 @@
 using UnityEngine;
 
+//public enum TileType
+//{
+//  Noraml,Obstacle
+//}
+
 public class Tile : MonoBehaviour
 {
   public int xIndex;
   public int yIndex;
 
   Board motherBoard;
+
+  //public TileType tileType = TileType.Noraml;
 
   [SerializeField] SpriteRenderer spriteRenderer;
 

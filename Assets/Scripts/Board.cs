@@ -10,7 +10,9 @@ public class Board : MonoBehaviour
 
   public float borderSize;
 
-  public GameObject tilePrefab;
+  public GameObject tileNormalPrefab;
+  public GameObject tileObstaclePrefab;
+
   public GameObject[] gamePiecePrefabs;
 
   public float swapTime = 0.5f;
@@ -28,14 +30,23 @@ public class Board : MonoBehaviour
     SetupTiles();
     SetupCamera();
 
+    //int[,] array2D = new int[,] {
+    //  { -1, -1, -1, -1, -1, -1, -1 },
+    //  { -1, -1, -1, -1, -1, -1, -1 },
+    //  { -1, -1, -1, -1, -1, -1, -1 },
+    //  { -1, -1, -1, -1, -1, -1, -1 },
+    //  { -1, -1, 2, 1, 2, -1, -1 },
+    //  { 3, -1, 1, 2, 1, -1, 2 },
+    //  { 3, -1, 2, 1, 2, -1, 1 }};
+
     int[,] array2D = new int[,] {
       { -1, -1, -1, -1, -1, -1, -1 },
       { -1, -1, -1, -1, -1, -1, -1 },
       { -1, -1, -1, -1, -1, -1, -1 },
       { -1, -1, -1, -1, -1, -1, -1 },
-      { -1, -1, 2, 1, 2, -1, -1 },
-      { 3, -1, 1, 2, 1, -1, 2 },
-      { 3, -1, 2, 1, 2, -1, 1 }};
+      { -1, 1, 2, 2, 0, 0, -1 },
+      { -1, 2, 1, 1, 1, 0, 1 },
+      { -1, 0, 0, 0, 0, 1, 1 }};
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
   }
@@ -62,7 +73,7 @@ public class Board : MonoBehaviour
     {
       for (int j = 0; j < height; j++)
       {
-        GameObject tile = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity) as GameObject;
+        GameObject tile = Instantiate(tileNormalPrefab, new Vector3(i, j, 0), Quaternion.identity) as GameObject;
         tile.name = "Tile (" + i + "," + j + ")";
         allTileList[i, j] = tile.GetComponent<Tile>();
         tile.transform.parent = transform;
@@ -117,7 +128,7 @@ public class Board : MonoBehaviour
     if (pieceType != -1)
     {
       gamePiece = Instantiate(GetGamePiece(pieceType), Vector3.zero, Quaternion.identity) as GameObject;
-      gamePiece.GetComponent<GamePiece>().Init(this);
+      gamePiece.GetComponent<GamePiece>().Init(this, pieceType);
       PlaceGamePiece(gamePiece.GetComponent<GamePiece>(), x, y);
       gamePiece.transform.parent = transform;
     }
@@ -166,7 +177,7 @@ public class Board : MonoBehaviour
 
   IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
   {
-    if (playerInputEnaled)
+    if (playerInputEnaled && !IsTileBlocked(new List<Tile> { clickedTile, targetTile }))
     {
       GamePiece clickedPiece = allGamePiecesList[clickedTile.xIndex, clickedTile.yIndex];
       GamePiece targetPiece = allGamePiecesList[targetTile.xIndex, targetTile.yIndex];
@@ -440,6 +451,18 @@ public class Board : MonoBehaviour
         HighlightTileOn(piece.xIndex, piece.yIndex, piece.GetComponent<SpriteRenderer>().color);
   }
 
+  bool IsTileBlocked(List<Tile> tiles)
+  {
+    foreach(Tile tile in tiles)
+    {
+      if (allGamePiecesList[tile.xIndex, tile.yIndex] != null)
+      {
+        if (allGamePiecesList[tile.xIndex, tile.yIndex].pieceType == PieceType.Obstacle)
+          return true;
+      }
+    }
+    return false;
+  }
   void HighlightPieces(List<GamePiece> gamePieces)
   {
     foreach (GamePiece gamePiece in gamePieces)
