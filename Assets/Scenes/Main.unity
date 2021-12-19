@@ -482,7 +482,7 @@ MonoBehaviour:
   tileNormalPrefab: {fileID: 3588992325552106184, guid: 6a82f9dba0dd245d6bd0ebc89b71b8e3, type: 3}
   tileObstaclePrefab: {fileID: 0}
   gamePiecePrefabs:
-  - {fileID: 8983896724464646123, guid: ec32adbf74f414981a1ad4aa1167f57d, type: 3}
+  - {fileID: 8983896724464646123, guid: 6e1e0ec4c6263489cbbf902dece53830, type: 3}
   - {fileID: 8983896724464646123, guid: 13cd3f453a3e245e49ec7cf440269f73, type: 3}
   - {fileID: 8983896724464646123, guid: b5a482ef4a19540a588b25e4501b699d, type: 3}
   - {fileID: 8983896724464646123, guid: a383034f3fea148458f172720182ef06, type: 3}

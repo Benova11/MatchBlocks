@@ -42,11 +42,11 @@ public class Board : MonoBehaviour
     int[,] array2D = new int[,] {
       { -1, -1, -1, -1, -1, -1, -1 },
       { -1, -1, -1, -1, -1, -1, -1 },
-      { -1, -1, -1, -1, -1, -1, -1 },
-      { -1, -1, -1, -1, -1, -1, -1 },
-      { -1, 1, 2, 2, 0, 0, -1 },
-      { -1, 2, 1, 1, 1, 0, 1 },
-      { -1, 0, 0, 0, 0, 1, 1 }};
+      { -1, 0, -1, -1, -1, -1, -1 },
+      { -1, 1, -1, -1, -1, -1, -1 },
+      { 2, 1, 2, 2,3, 0, -1 },
+      { 1, 2, 3, 1, 1, 0, 1 },
+      { 0, 0, 0, 0, 0, 1, 1 }};
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
   }
@@ -239,7 +239,7 @@ public class Board : MonoBehaviour
     if (IsWithinBounds(startX, startY))
       startPiece = allGamePiecesList[startX, startY];
 
-    if (startPiece != null)
+    if (startPiece != null && startPiece.pieceType != PieceType.Obstacle)
       matches.Add(startPiece);
     else
       return null;
@@ -257,12 +257,14 @@ public class Board : MonoBehaviour
 
       GamePiece nextPiece = allGamePiecesList[nextX, nextY];
 
-      if (nextPiece == null)
+      if (nextPiece == null ||(startPiece.yIndex > 1 && allGamePiecesList[startPiece.xIndex,startPiece.yIndex -1] == null))
         break;
       else
       {
-        if (nextPiece.matchValue == startPiece.matchValue && !matches.Contains(nextPiece))
+        if (nextPiece.matchValue == startPiece.matchValue && !matches.Contains(nextPiece) && nextPiece.pieceType != PieceType.Obstacle)
           matches.Add(nextPiece);
+        //if(nextPiece.yIndex - 1 > 0 && allGamePiecesList[nextPiece.xIndex,nextPiece.yIndex -1].pieceType == PieceType.Obstacle)
+        //  matches.Add(allGamePiecesList[nextPiece.xIndex, nextPiece.yIndex + 1]);
         else
           break;
       }
@@ -407,15 +409,22 @@ public class Board : MonoBehaviour
         yield return null;
       yield return new WaitForSeconds(0.1f);
 
+
+
       matches = FindAllMatches();//FindMatchesAt(movingPieces);
 
-      if (matches.Count == 0)
-      { isFinished = true; break; }
+      if (matches.Count == 0) { isFinished = true; break; }
       else
         yield return StartCoroutine(ClearAndCollapseRoutine(matches));
     }
     yield return null;
-
+    //foreach (GamePiece gamePiece in movingPieces)
+    //{
+    //  if (gamePiece.pieceType == PieceType.Obstacle)
+    //  {
+    //    ClearPieceAt(gamePiece.xIndex, gamePiece.yIndex);
+    //  }
+    //}
     playerInputEnaled = true;
   }
 
@@ -463,6 +472,7 @@ public class Board : MonoBehaviour
     }
     return false;
   }
+
   void HighlightPieces(List<GamePiece> gamePieces)
   {
     foreach (GamePiece gamePiece in gamePieces)
