@@ -25,6 +25,8 @@ public class Board : MonoBehaviour
 
   bool playerInputEnaled = true;
 
+  ParticleManager particleManager;
+
   void Start()
   {
     SetupTiles();
@@ -49,6 +51,7 @@ public class Board : MonoBehaviour
       { 0, 0, 0, 0, 0, 1, 1 }};
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
+    particleManager = FindObjectOfType<ParticleManager>();
   }
 
   int[,] AdjustMatrixForUserDisplay(int[,] matrix)
@@ -394,20 +397,20 @@ public class Board : MonoBehaviour
     List<GamePiece> movingPieces = new List<GamePiece>();
     List<GamePiece> matches = new List<GamePiece>();
 
-    HighlightPieces(gamePieces);
-    yield return new WaitForSeconds(0.25f);
+    //HighlightPieces(gamePieces);
+    //yield return new WaitForSeconds(0.25f);
 
     bool isFinished = false;
     while (!isFinished)
     {
       ClearPieceAt(gamePieces);
-      //yield return new WaitForSeconds(0.1f);
+      yield return new WaitForSeconds(0.1f);
 
       movingPieces = CollapseColumn(gamePieces);
 
       while (!IsCollapsed(movingPieces))
         yield return null;
-      yield return new WaitForSeconds(0.1f);
+      yield return new WaitForSeconds(0.15f);
 
 
 
@@ -499,6 +502,7 @@ public class Board : MonoBehaviour
 
     if (pieceToClear != null)
     {
+      particleManager.ClearPieceFXAt(x, y);
       allGamePiecesList[x, y] = null;
       Destroy(pieceToClear.gameObject);
     }
