@@ -4,7 +4,7 @@ using System.Collections;
 public enum PieceValue { LightBlue,Blue,Pink,Purple,Green,Red,Yellow,Wild }
 public enum PieceType { Blocked,Regular }
 
-//[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class GamePiece : MonoBehaviour
 {
 	public enum InterpType { Linear,EaseOut,EaseIn,SmoothStep,SmootherStep };
@@ -19,15 +19,15 @@ public class GamePiece : MonoBehaviour
 
 	bool isMoving = false;
 
-	//SpriteRenderer spriteRenderer;
+	[SerializeField]SpriteRenderer spriteRenderer;
 	public Color particleColor;
 	public int breakableValue = 0;
 	public Sprite[] breakableSprites;
 
-	public void Init(Board board,int pieceType)
+	public void Init(Board board,int pieceValue)
 	{
 		motherBoard = board;
-		//this.pieceType = (PieceType)pieceType;
+		this.pieceValue = (PieceValue)Mathf.Abs(pieceValue) - 1;
 	}
 
 	public void SetCoord(int x, int y)
@@ -74,6 +74,12 @@ public class GamePiece : MonoBehaviour
 		}
 
 		isMoving = false;
+	}
+
+	public void ChangePiece(PieceValue newValue,Sprite newSprite)
+  {
+		pieceValue = newValue;
+		spriteRenderer.sprite = newSprite;
 	}
 
 	float UseCustomInterpulation(float t)

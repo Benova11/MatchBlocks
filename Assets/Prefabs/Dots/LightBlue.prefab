@@ -97,9 +97,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interpolation: 4
   pieceType: 1
-  matchValue: 0
+  pieceValue: 0
   xIndex: 0
   yIndex: 0
+  spriteRenderer: {fileID: 8983896724464646125}
   particleColor: {r: 0.40784317, g: 0.91372555, b: 0.7411765, a: 1}
   breakableValue: 0
   breakableSprites: []

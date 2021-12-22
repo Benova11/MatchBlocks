@@ -52,6 +52,7 @@ public class Board : MonoBehaviour
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
     particleManager = FindObjectOfType<ParticleManager>();
+    ChangePieceAt(0, 0, PieceValue.Yellow, gamePiecePrefabs[(int)PieceValue.Yellow].GetComponent<SpriteRenderer>().sprite);
   }
 
   int[,] AdjustMatrixForUserDisplay(int[,] matrix)
@@ -520,6 +521,11 @@ public class Board : MonoBehaviour
           particleManager.ClearPieceFXAt(piece.particleColor, piece.xIndex, piece.yIndex);
       }
     }
+  }
+
+  void ChangePieceAt(int x, int y,PieceValue pieceValue,Sprite sprite)
+  {
+    allGamePiecesList[x, y].ChangePiece(pieceValue, sprite);
   }
 
   void ClearBoard()

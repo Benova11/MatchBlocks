@@ -100,6 +100,7 @@ MonoBehaviour:
   pieceValue: 2
   xIndex: 0
   yIndex: 0
+  spriteRenderer: {fileID: 8983896724464646125}
   particleColor: {r: 0.96470594, g: 0.36862746, b: 0.6039216, a: 1}
   breakableValue: 0
   breakableSprites: []
