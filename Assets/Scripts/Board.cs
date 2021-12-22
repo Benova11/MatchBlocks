@@ -52,7 +52,7 @@ public class Board : MonoBehaviour
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
     particleManager = FindObjectOfType<ParticleManager>();
-    ChangePieceAt(0, 0, PieceValue.Yellow, gamePiecePrefabs[(int)PieceValue.Yellow].GetComponent<SpriteRenderer>().sprite);
+    //ChangePieceAt(0, 0, PieceValue.Yellow, gamePiecePrefabs[(int)PieceValue.Yellow].GetComponent<SpriteRenderer>().sprite);
   }
 
   int[,] AdjustMatrixForUserDisplay(int[,] matrix)
@@ -131,7 +131,6 @@ public class Board : MonoBehaviour
     GameObject gamePiece = null;
     if (pieceValue != -9)
     {
-      Debug.Log(pieceValue);
       gamePiece = Instantiate(GetGamePiece(pieceValue), Vector3.zero, Quaternion.identity) as GameObject;
       gamePiece.GetComponent<GamePiece>().Init(this, pieceValue);
       PlaceGamePiece(gamePiece.GetComponent<GamePiece>(), x, y);
