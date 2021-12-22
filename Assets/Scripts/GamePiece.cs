@@ -2,16 +2,16 @@ using UnityEngine;
 using System.Collections;
 
 public enum PieceValue { LightBlue,Blue,Pink,Purple,Green,Red,Yellow,Wild }
-public enum PieceType { Obstacle,Blue, Pink, Purple, Green }
+public enum PieceType { Blocked,Regular }
 
-[RequireComponent(typeof(SpriteRenderer))]
+//[RequireComponent(typeof(SpriteRenderer))]
 public class GamePiece : MonoBehaviour
 {
 	public enum InterpType { Linear,EaseOut,EaseIn,SmoothStep,SmootherStep };
 
 	public InterpType interpolation = InterpType.SmootherStep;
-	public PieceType pieceType = PieceType.Blue;
-	public PieceValue matchValue;
+	public PieceType pieceType = PieceType.Regular;
+	public PieceValue pieceValue;
 
 	public int xIndex;
 	public int yIndex;
@@ -19,14 +19,15 @@ public class GamePiece : MonoBehaviour
 
 	bool isMoving = false;
 
-	SpriteRenderer spriteRenderer;
+	//SpriteRenderer spriteRenderer;
+	public Color particleColor;
 	public int breakableValue = 0;
 	public Sprite[] breakableSprites;
 
 	public void Init(Board board,int pieceType)
 	{
 		motherBoard = board;
-		this.pieceType = (PieceType)pieceType;
+		//this.pieceType = (PieceType)pieceType;
 	}
 
 	public void SetCoord(int x, int y)

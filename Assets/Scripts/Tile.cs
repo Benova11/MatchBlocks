@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 //public enum TileType
 //{
-//  Noraml,Obstacle
+//  Noraml,Blocked
 //}
 
 public class Tile : MonoBehaviour

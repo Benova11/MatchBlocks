@@ -95,7 +95,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d154c7781d17d4591866cad9cf809c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interpolation: 4
+  pieceType: 1
+  pieceValue: 2
   xIndex: 0
   yIndex: 0
-  interpolation: 4
-  matchValue: 2
+  particleColor: {r: 0.96470594, g: 0.36862746, b: 0.6039216, a: 1}
+  breakableValue: 0
+  breakableSprites: []

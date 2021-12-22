@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8983896724464646125}
   - component: {fileID: 8983896724464646122}
   m_Layer: 0
-  m_Name: Green
+  m_Name: BlueBlocked
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2d5d894a495314ef4bd86633927c0261, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 21aa0eece09fe457695d64d86e067db3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,10 +96,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interpolation: 4
-  pieceType: 1
-  pieceValue: 4
+  pieceType: 0
+  pieceValue: 1
   xIndex: 0
   yIndex: 0
-  particleColor: {r: 0.2901961, g: 0.86274517, b: 0.5803922, a: 1}
+  particleColor: {r: 0.34901962, g: 0.7058824, b: 0.97647065, a: 1}
   breakableValue: 0
   breakableSprites: []

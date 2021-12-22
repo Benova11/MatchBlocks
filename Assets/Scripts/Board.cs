@@ -11,9 +11,9 @@ public class Board : MonoBehaviour
   public float borderSize;
 
   public GameObject tileNormalPrefab;
-  public GameObject tileObstaclePrefab;
 
   public GameObject[] gamePiecePrefabs;
+  public GameObject[] blockedGamePiecePrefabs;
 
   public float swapTime = 0.5f;
 
@@ -42,13 +42,13 @@ public class Board : MonoBehaviour
     //  { 3, -1, 2, 1, 2, -1, 1 }};
 
     int[,] array2D = new int[,] {
-      { -1, -1, -1, -1, -1, -1, -1 },
-      { -1, -1, -1, -1, -1, -1, -1 },
-      { -1, 0, -1, -1, -1, -1, -1 },
-      { -1, 1, -1, -1, -1, -1, -1 },
-      { 2, 1, 2, 2,3, 0, -1 },
-      { 1, 2, 3, 1, 1, 0, 1 },
-      { 0, 0, 0, 0, 0, 1, 1 }};
+      { -9, -9, -9, -9, -9, -9, -9 },
+      { -9, -9, -9, -9, -9, -9, -9 },
+      { -9, 2, -9, -9, -9, -9, -9 },
+      { -9, 1, 1, 1, -9, -9, -9 },
+      { 2, 1, 2, 2,3, 2, -9 },
+      { 1, 2, 3, -1, 1, 4, 1 },
+      { 2, -3, 1, 1, 2, 1, -5 }};
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
     particleManager = FindObjectOfType<ParticleManager>();
@@ -99,11 +99,11 @@ public class Board : MonoBehaviour
 
   }
 
-  GameObject GetGamePiece(int pieceType)
+  GameObject GetGamePiece(int pieceValue)
   {
-    if (gamePiecePrefabs[pieceType] == null)
-      Debug.LogWarning("BOARD:  " + pieceType + "does not contain a valid GamePiece prefab!");
-    return gamePiecePrefabs[pieceType];
+    if (gamePiecePrefabs[Mathf.Abs(pieceValue - 1)] == null)
+      Debug.LogWarning("BOARD:  " + pieceValue + "does not contain a valid GamePiece prefab!");
+    return pieceValue > 0 ? gamePiecePrefabs[pieceValue - 1] : blockedGamePiecePrefabs[Mathf.Abs(pieceValue) - 1];
   }
 
   public void PlaceGamePiece(GamePiece gamePiece, int x, int y)
@@ -125,13 +125,14 @@ public class Board : MonoBehaviour
     gamePiece.SetCoord(x, y);
   }
 
-  GamePiece FillPieceAt(int x, int y, int pieceType)
+  GamePiece FillPieceAt(int x, int y, int pieceValue)
   {
     GameObject gamePiece = null;
-    if (pieceType != -1)
+    if (pieceValue != -9)
     {
-      gamePiece = Instantiate(GetGamePiece(pieceType), Vector3.zero, Quaternion.identity) as GameObject;
-      gamePiece.GetComponent<GamePiece>().Init(this, pieceType);
+      Debug.Log(pieceValue);
+      gamePiece = Instantiate(GetGamePiece(pieceValue), Vector3.zero, Quaternion.identity) as GameObject;
+      gamePiece.GetComponent<GamePiece>().Init(this, pieceValue);
       PlaceGamePiece(gamePiece.GetComponent<GamePiece>(), x, y);
       gamePiece.transform.parent = transform;
     }
@@ -147,7 +148,7 @@ public class Board : MonoBehaviour
       for (int j = 0; j < height; j++)
       {
         GamePiece gamePiece;
-        if (matrix[i, j] != -1)
+        if (matrix[i, j] != -9)
           gamePiece = FillPieceAt(i, j, matrix[i, j]);
       }
     }
@@ -242,7 +243,7 @@ public class Board : MonoBehaviour
     if (IsWithinBounds(startX, startY))
       startPiece = allGamePiecesList[startX, startY];
 
-    if (startPiece != null && startPiece.pieceType != PieceType.Obstacle)
+    if (startPiece != null) //&& startPiece.pieceType != PieceType.Blocked)
       matches.Add(startPiece);
     else
       return null;
@@ -264,9 +265,9 @@ public class Board : MonoBehaviour
         break;
       else
       {
-        if (nextPiece.matchValue == startPiece.matchValue && !matches.Contains(nextPiece) && nextPiece.pieceType != PieceType.Obstacle)
+        if (nextPiece.pieceValue == startPiece.pieceValue && !matches.Contains(nextPiece))// && nextPiece.pieceType != PieceType.Blocked)
           matches.Add(nextPiece);
-        //if(nextPiece.yIndex - 1 > 0 && allGamePiecesList[nextPiece.xIndex,nextPiece.yIndex -1].pieceType == PieceType.Obstacle)
+        //if(nextPiece.yIndex - 1 > 0 && allGamePiecesList[nextPiece.xIndex,nextPiece.yIndex -1].pieceType == PieceType.Blocked)
         //  matches.Add(allGamePiecesList[nextPiece.xIndex, nextPiece.yIndex + 1]);
         else
           break;
@@ -398,21 +399,19 @@ public class Board : MonoBehaviour
     List<GamePiece> matches = new List<GamePiece>();
 
     //HighlightPieces(gamePieces);
-    //yield return new WaitForSeconds(0.25f);
+    yield return new WaitForSeconds(0.05f);
 
     bool isFinished = false;
     while (!isFinished)
     {
       ClearPieceAt(gamePieces);
-      yield return new WaitForSeconds(0.1f);
+      yield return new WaitForSeconds(0.2f);
 
       movingPieces = CollapseColumn(gamePieces);
 
       while (!IsCollapsed(movingPieces))
         yield return null;
-      yield return new WaitForSeconds(0.15f);
-
-
+      //yield return new WaitForSeconds(0.1f);
 
       matches = FindAllMatches();//FindMatchesAt(movingPieces);
 
@@ -423,7 +422,7 @@ public class Board : MonoBehaviour
     yield return null;
     //foreach (GamePiece gamePiece in movingPieces)
     //{
-    //  if (gamePiece.pieceType == PieceType.Obstacle)
+    //  if (gamePiece.pieceType == PieceType.Blocked)
     //  {
     //    ClearPieceAt(gamePiece.xIndex, gamePiece.yIndex);
     //  }
@@ -469,7 +468,7 @@ public class Board : MonoBehaviour
     {
       if (allGamePiecesList[tile.xIndex, tile.yIndex] != null)
       {
-        if (allGamePiecesList[tile.xIndex, tile.yIndex].pieceType == PieceType.Obstacle)
+        if (allGamePiecesList[tile.xIndex, tile.yIndex].pieceType == PieceType.Blocked)
           return true;
       }
     }
@@ -502,12 +501,12 @@ public class Board : MonoBehaviour
 
     if (pieceToClear != null)
     {
-      particleManager.ClearPieceFXAt(x, y);
+      //particleManager.ClearPieceFXAt(x, y);
       allGamePiecesList[x, y] = null;
       Destroy(pieceToClear.gameObject);
     }
 
-    HighlightTileOff(x, y);
+    //HighlightTileOff(x, y);
   }
 
   void ClearPieceAt(List<GamePiece> gamePieces)
@@ -515,7 +514,11 @@ public class Board : MonoBehaviour
     foreach (GamePiece piece in gamePieces)
     {
       if (piece != null)
+      {
         ClearPieceAt(piece.xIndex, piece.yIndex);
+        if (particleManager != null)
+          particleManager.ClearPieceFXAt(piece.particleColor, piece.xIndex, piece.yIndex);
+      }
     }
   }
 

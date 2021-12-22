@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e649b950c4da4338a9370ce353c93e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allParticles: []
+  allParticles:
+  - {fileID: 13713420673339191}
+  - {fileID: 13713422351372564}
+  - {fileID: 158089404822852772}
   lifeTime: 1
 --- !u!1 &13713420673339186
 GameObject:
