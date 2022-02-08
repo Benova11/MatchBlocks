@@ -12,6 +12,7 @@ public class GamePiece : MonoBehaviour
 	public InterpType interpolation = InterpType.SmootherStep;
 	public PieceType pieceType = PieceType.Regular;
 	public PieceValue pieceValue;
+	public int scoreValue = 20;
 
 	public int xIndex;
 	public int yIndex;
@@ -103,4 +104,13 @@ public class GamePiece : MonoBehaviour
 		}
 		return t;
 	}
+
+	public void ScorePoints()
+  {
+		if(GoalsManager.Instance != null)
+    {
+			GoalsManager.Instance.OnGoalAchieved(1);
+			//ScoreManager.Instance.AddScore(scoreValue);
+		}
+  }
 }

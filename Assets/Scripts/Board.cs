@@ -19,6 +19,7 @@ public class Board : MonoBehaviour
 
   Tile[,] allTileList;
   GamePiece[,] allGamePiecesList;
+  int numOfInitPieces = 0;
 
   Tile clickedTile;
   Tile targetTile;
@@ -44,14 +45,16 @@ public class Board : MonoBehaviour
     int[,] array2D = new int[,] {
       { -9, -9, -9, -9, -9, -9, -9 },
       { -9, -9, -9, -9, -9, -9, -9 },
-      { -9, 2, -9, -9, -9, -9, -9 },
-      { -9, 1, 1, 1, -9, -9, -9 },
+      { -9, 1, -9, -9, -9, -9, -9 },
+      { -9, 2, 1, 1, -9, -9, -9 },
       { 2, 1, 2, 2,3, 2, -9 },
-      { 1, 2, 3, -1, 1, 4, 1 },
-      { 2, -3, 1, 1, 2, 1, -5 }};
+      { 2, 1, 3, -1, 1, 4, 1 },
+      { 4, -3, 1, 1, 2, 1, -5 }};
 
     FillBoard(AdjustMatrixForUserDisplay(array2D));
     particleManager = FindObjectOfType<ParticleManager>();
+    GoalsManager.Instance.SetGoals(numOfInitPieces);
+    MovesManager.Instance.SetMoves(numOfInitPieces/3);
     //ChangePieceAt(0, 0, PieceValue.Yellow, gamePiecePrefabs[(int)PieceValue.Yellow].GetComponent<SpriteRenderer>().sprite);
   }
 
@@ -149,7 +152,10 @@ public class Board : MonoBehaviour
       {
         GamePiece gamePiece;
         if (matrix[i, j] != -9)
+        {
+          numOfInitPieces++;
           gamePiece = FillPieceAt(i, j, matrix[i, j]);
+        }
       }
     }
   }
@@ -188,6 +194,7 @@ public class Board : MonoBehaviour
 
       if (clickedPiece != null && IsMoveSafe(clickedTile, targetTile))
       {
+        MovesManager.Instance.OnTurnPlayed();
         clickedPiece.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
         if (targetPiece != null)
           targetPiece.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
@@ -515,6 +522,7 @@ public class Board : MonoBehaviour
     {
       if (piece != null)
       {
+        piece.ScorePoints();
         ClearPieceAt(piece.xIndex, piece.yIndex);
         if (particleManager != null)
           particleManager.ClearPieceFXAt(piece.particleColor, piece.xIndex, piece.yIndex);
